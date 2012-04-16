@@ -1,13 +1,6 @@
 package com.bitblossom.jcr_fluent;
 
 /**
- * 		.or()
- * 		.and()
- * 
- * 		.isNotActivated()
- * 		.propertyLessThan(propertyName, lessThan)
- * 		.propertyLessThan(propertyName, lessThan, DateFormat)
- * 		.propertyGreaterThan()
  * 
  * @author eli
  *

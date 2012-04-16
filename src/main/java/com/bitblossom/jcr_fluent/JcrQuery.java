@@ -10,20 +10,6 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
 /**
- * new XPathQueryBuilder("/jcr:root/content/myapp")
- * 		.allPathsBelow()			// "//"
- * 		.element("jcr:content")		// "//jcr:content"
- * 		.propertyExists("jcr:title")		// "//jcr:content[@jcr:title]"
- * 		.propertyEqual("jcr:authoredBy", "eli")	// "//jcr:content[@jcr:title and @jcr:authoredBy="eli"]
- * 		.propertyLike("jcr:something", "value")		// "jcr:like(@jcr:something, "value")
- * 		.propertyNotEqual()
- * 		.or()
- * 		.and()
- * 
- * 		.isNotActivated()
- * 		.propertyLessThan(propertyName, lessThan)
- * 		.propertyLessThan(propertyName, lessThan, DateFormat)
- * 		.propertyGreaterThan()
  * 
  * @author eli
  *
