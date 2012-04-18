@@ -10,10 +10,11 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
+import com.google.common.base.Joiner;
+
 /**
  * 
  * @author eli
- * 
  */
 public class JcrQuery {
 
@@ -70,9 +71,8 @@ public class JcrQuery {
     builder.append(nodeName);
     if (!predicates.isEmpty()) {
       builder.append("[");
-
-      builder.append(predicate.asString());
-
+      String predicateString = Joiner.on(" and ").join(predicates);
+      builder.append(predicateString);
       builder.append("]");
     }
     return builder.toString();

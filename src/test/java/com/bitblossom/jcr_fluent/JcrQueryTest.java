@@ -1,6 +1,7 @@
 package com.bitblossom.jcr_fluent;
 
-import static com.bitblossom.jcr_fluent.Restriction.property;
+import static com.bitblossom.jcr_fluent.Predicate.any;
+import static com.bitblossom.jcr_fluent.Property.property;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -10,7 +11,7 @@ public class JcrQueryTest {
   @Test
   public void canChainMoreThanTwoRestrictions() {
     JcrQuery query =
-        JcrQuery.at("/jcr:root/content/myapp/").matchingAll(property("propertyA").eq("valueA"),
+        JcrQuery.at("/jcr:root/content/myapp/").with(property("propertyA").eq("valueA"),
             property("propertyB").eq("valueB"), property("propertyC").eq(42));
 
     assertTrue(query
@@ -22,9 +23,8 @@ public class JcrQueryTest {
   @Test
   public void canCreateScopedPredicates() {
     JcrQuery query =
-        JcrQuery.at("/jcr:root/content/myapp/").matchingAll(
-            property("propertyA").eq("valueA").orMatchingAny(property("propertyB").eq("valueB"),
-                property("propertyC").eq("valueC")));
+        JcrQuery.at("/jcr:root/content/myapp/").with(property("propertyA").eq("valueA"),
+            any(property("propertyB").eq("valueB"), property("propertyC").eq(42)));
 
     System.out.println(query.buildStatement());
     assertTrue(query

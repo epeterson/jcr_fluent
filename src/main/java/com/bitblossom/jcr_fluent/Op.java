@@ -10,6 +10,11 @@ package com.bitblossom.jcr_fluent;
 // ACTIV, - jcr node activated
 // NACTIV - jcr node not activated
 
+/**
+ * An operation that can be performed on a JCR property, like '=', '>', '<', 'jcr:like', etc.
+ * 
+ * @author eli
+ */
 public enum Op {
   EQ, NEQ, LIKE, GT, LT, GTEQ, LTEQ, ACTIV, NACTIV
 }

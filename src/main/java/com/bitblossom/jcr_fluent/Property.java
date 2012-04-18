@@ -39,6 +39,8 @@ public class Property {
     return new Predicate(this, value, Op.LT);
   }
 
+  // TODO: Add more comparison types
+
   @Override
   public String toString() {
     return property;

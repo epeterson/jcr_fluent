@@ -1,5 +1,7 @@
 package com.bitblossom.jcr_fluent;
 
+import com.google.common.base.Joiner;
+
 /**
  * A Predicate represents a statement about a JCR Property that can be true or false. A Predicate
  * can be either a single statement (Property A = 'B') or a grouping of such statements to be
@@ -53,12 +55,13 @@ public class Predicate {
    * @param predicates Predicate objects to be evaluated
    * @return A new Predicate representing the statement
    */
-  public Predicate any(Predicate... predicates) {
+  public static Predicate any(Predicate... predicates) {
     return new Predicate(false, predicates);
   }
 
 
-  public String asString() {
+  @Override
+  public String toString() {
     // Type 1
     if (predicates == null) {
       switch (op) {
@@ -78,9 +81,8 @@ public class Predicate {
       builder.append("(");
 
       String operator = conjunction ? " and " : " or ";
-      for (Predicate predicate : predicates) {
-        builder.append(predicate.asString());
-      }
+      String predicateString = Joiner.on(operator).join(predicates);
+      builder.append(predicateString);
 
       builder.append(")");
       return builder.toString();
