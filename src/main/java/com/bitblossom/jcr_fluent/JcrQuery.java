@@ -1,6 +1,7 @@
 package com.bitblossom.jcr_fluent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.jcr.NodeIterator;
@@ -12,71 +13,76 @@ import javax.jcr.query.QueryManager;
 /**
  * 
  * @author eli
- *
+ * 
  */
 public class JcrQuery {
-	
-	private String path = "/";
-	private String element = "*";
-	
-	private boolean allPathsBelow = false;
-	
-	private List<Restrictions> restrictions = new ArrayList<Restrictions>();
-	private List<Order> orderings = new ArrayList<Order>();
 
-	public JcrQuery(String path) {
-		//TODO: Make sure that path fits a specific format (trailing-leading slashes, etc)
-		this.path = path;
-	}
+  private String path = "/";
+  private String nodeName = "*";
 
-	public JcrQuery allPathsBelow() {
-		this.allPathsBelow = true;
-		return this;
-	}
-	
-	public JcrQuery element(String element) {
-		this.element = element;
-		return this;
-	}
-	
-	
-	public JcrQuery add(Restrictions restriction) {
-		this.restrictions.add(restriction);
-		return this;
-	}
-	
-	public JcrQuery addOrder(Order order) {
-		throw new UnsupportedOperationException("Not implemented");
-	}
-	
-	
-	public String buildStatement() {
-		StringBuilder builder = new StringBuilder(path);
-		if (allPathsBelow) {
-			builder.append("/");
-		}
-		
-		builder.append(element);
-		if (!restrictions.isEmpty()) {
-			builder.append("[");
-			builder.append(restrictions.get(0).asString());
-			
-			int restrictionsIdx = 1;
-			while (restrictionsIdx < restrictions.size()) {
-				builder.append(" and ");
-				builder.append(restrictions.get(restrictionsIdx).asString());
-				restrictionsIdx++;
-			}
-			builder.append("]");
-		}
-		return builder.toString();
-	}
-	
-	@SuppressWarnings("deprecation")
-	public NodeIterator execute(Session session) throws RepositoryException {
-		QueryManager queryManager = session.getWorkspace().getQueryManager();
-		Query query = queryManager.createQuery(buildStatement(), Query.XPATH);
-		return query.execute().getNodes();
-	}
+  private boolean includingDescendantPaths = false;
+
+  private final List<Predicate> predicates = new ArrayList<Predicate>();
+
+  private JcrQuery(String path) {
+    // TODO: Make sure that path fits a specific format (trailing-leading slashes, etc)
+    this.path = path;
+  }
+
+  /**
+   * All queries should start here. Describes the root path in the JCR Repository that the query
+   * should be executed from.
+   * 
+   * @param path The query path.
+   * @return A new JcrQuery object,
+   */
+  public static JcrQuery at(String path) {
+    return new JcrQuery(path);
+  }
+
+  public JcrQuery withName(String nodeName) {
+    this.nodeName = nodeName;
+    return this;
+  }
+
+  public JcrQuery withType(String typeName) {
+    Predicate typeComparison = Property.property("cq:type").eq(typeName);
+    predicates.add(typeComparison);
+    return this;
+  }
+
+  public JcrQuery includingDescendantPaths() {
+    this.includingDescendantPaths = true;
+    return this;
+  }
+
+  public JcrQuery with(Predicate... predicates) {
+    this.predicates.addAll(Arrays.asList(predicates));
+    return this;
+  }
+
+  public String buildStatement() {
+    StringBuilder builder = new StringBuilder(path);
+    if (includingDescendantPaths) {
+      builder.append("/");
+    }
+
+    builder.append(nodeName);
+    if (!predicates.isEmpty()) {
+      builder.append("[");
+
+      builder.append(predicate.asString());
+
+      builder.append("]");
+    }
+    return builder.toString();
+  }
+
+  @SuppressWarnings("deprecation")
+  public NodeIterator execute(Session session) throws RepositoryException {
+    QueryManager queryManager = session.getWorkspace().getQueryManager();
+    Query query = queryManager.createQuery(buildStatement(), Query.XPATH);
+    return query.execute().getNodes();
+  }
 
 }
