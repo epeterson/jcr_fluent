@@ -72,7 +72,7 @@ public class Predicate {
         case LIKE:
           return String.format("jcr:like(@%s, '%s')", property.toString(), value);
         default:
-          throw new UnsupportedOperationException("Operation not implemented: " + op);
+          throw new UnsupportedOperationException("Operation not implemented yet: " + op);
       }
     }
     // Type 2

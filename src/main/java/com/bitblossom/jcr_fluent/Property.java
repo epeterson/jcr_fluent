@@ -14,6 +14,12 @@ public class Property {
     this.property = property;
   }
 
+  /**
+   * Creates and returns a new Property object.
+   * 
+   * @param property A String representing the property name
+   * @return A new Property object.
+   */
   public static Property property(String property) {
     return new Property(property);
   }
