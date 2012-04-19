@@ -10,6 +10,9 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Joiner;
 
 /**
@@ -25,6 +28,8 @@ import com.google.common.base.Joiner;
  * @author eli
  */
 public class JcrQuery {
+
+  private static final Logger log = LoggerFactory.getLogger(JcrQuery.class);
 
   private String path = "/";
   private String nodeName = "*";
@@ -137,7 +142,10 @@ public class JcrQuery {
   @SuppressWarnings("deprecation")
   public NodeIterator execute(Session session) throws RepositoryException {
     QueryManager queryManager = session.getWorkspace().getQueryManager();
-    Query query = queryManager.createQuery(buildStatement(), Query.XPATH);
+    String queryString = buildStatement();
+    log.info("Executing Query: {}", queryString);
+
+    Query query = queryManager.createQuery(queryString, Query.XPATH);
     return query.execute().getNodes();
   }
 

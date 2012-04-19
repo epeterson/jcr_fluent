@@ -26,7 +26,6 @@ public class JcrQueryTest {
         JcrQuery.at("/jcr:root/content/myapp/").with(property("propertyA").eq("valueA"),
             any(property("propertyB").eq("valueB"), property("propertyC").eq(42)));
 
-    System.out.println(query.buildStatement());
     assertTrue(query
         .buildStatement()
         .equals(
