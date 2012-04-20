@@ -28,7 +28,7 @@ public class JcrQueryIntegrationTest extends BaseIntegrationTest {
             .execute(session);
 
     assertTrue(nodeItr.hasNext());
-    assertEquals(nodeItr.nextNode().getName(), "jcr:xmltext");
+    assertEquals("jcr:xmltext", nodeItr.nextNode().getName());
   }
 
   @Test
@@ -39,7 +39,7 @@ public class JcrQueryIntegrationTest extends BaseIntegrationTest {
             .execute(session);
 
     assertTrue(nodeItr.hasNext());
-    assertEquals(nodeItr.nextNode().getName(), "svg:svg");
+    assertEquals("svg:svg", nodeItr.nextNode().getName());
   }
 
 }

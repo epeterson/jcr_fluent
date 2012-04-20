@@ -45,10 +45,15 @@ public class Property {
     return new Predicate(this, value, Op.LT);
   }
 
-  // TODO: Add more comparison types
+  public Predicate contains(Object value) {
+    return new Predicate(this, value, Op.CONTAINS);
+  }
 
   @Override
   public String toString() {
+    // TODO: Handle properties at sub-levels by identifying parts of the string and pre-pend the
+    // @-symbol here
+    // TODO: Escape illegal characters in the property name/path
     return property;
   }
 

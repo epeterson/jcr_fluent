@@ -10,6 +10,7 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
+import org.apache.jackrabbit.util.ISO9075;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +40,11 @@ public class JcrQuery {
   private final List<Predicate> predicates = new ArrayList<Predicate>();
 
   private JcrQuery(String path) {
-    // TODO: Make sure that path fits a specific format (trailing-leading slashes, etc)
-    this.path = path;
+    // Standardize trailing slashes
+    if (path.length() > 1 && !path.endsWith("/")) {
+      path = path.concat("/");
+    }
+    this.path = ISO9075.encodePath(path);
   }
 
   /**

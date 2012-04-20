@@ -1,5 +1,10 @@
 package com.bitblossom.jcr_fluent;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.xml.bind.DatatypeConverter;
+
 import com.google.common.base.Joiner;
 
 /**
@@ -59,6 +64,26 @@ public class Predicate {
     return new Predicate(false, predicates);
   }
 
+  private String formatValue(Object value) {
+    if (value instanceof String) {
+      String string = (String) value;
+      string = string.replaceAll("'", "''").replaceAll("\"", "\"\"");
+      // Escape other special characters
+      return String.format("'%s'", value);
+    } else if (value instanceof Date) {
+      Calendar cal = Calendar.getInstance();
+      cal.setTime((Date) value);
+      // Use JAXB to help convert to a valid DateTime String (ISO8601)
+      // XXX: Use Jackrabbit ISO8601 class instead?
+      return String.format("xs:dateTime('%s')", DatatypeConverter.printDateTime(cal));
+    } else if (value instanceof Calendar) {
+      return String.format("xs:dateTime('%s')", DatatypeConverter.printDateTime((Calendar) value));
+    } else if (value instanceof Number) {
+      return String.format("'%s'", value);
+    } else {
+      return String.format("'%s'", value);
+    }
+  }
 
   @Override
   public String toString() {
@@ -66,11 +91,21 @@ public class Predicate {
     if (predicates == null) {
       switch (op) {
         case EQ:
-          return String.format("@%s='%s'", property.toString(), value);
+          return String.format("@%s=%s", property.toString(), formatValue(value));
         case NEQ:
-          return String.format("not @%s='%s'", property.toString(), value);
+          return String.format("not(@%s=%s)", property.toString(), formatValue(value));
         case LIKE:
-          return String.format("jcr:like(@%s, '%s')", property.toString(), value);
+          return String.format("jcr:like(@%s, %s)", property.toString(), formatValue(value));
+        case GT:
+          return String.format("@%s>%s", property.toString(), formatValue(value));
+        case LT:
+          return String.format("@%s<%s", property.toString(), formatValue(value));
+        case GTEQ:
+          return String.format("@%s>=%s", property.toString(), formatValue(value));
+        case LTEQ:
+          return String.format("@%s<=%s", property.toString(), formatValue(value));
+        case CONTAINS:
+          return String.format("jcr:contains(@%s, %s)", property.toString(), formatValue(value));
         default:
           throw new UnsupportedOperationException("Operation not implemented yet: " + op);
       }
