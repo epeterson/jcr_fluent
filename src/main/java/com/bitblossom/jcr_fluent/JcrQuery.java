@@ -10,7 +10,6 @@ import javax.jcr.Session;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 
-import org.apache.jackrabbit.util.ISO9075;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,11 +39,11 @@ public class JcrQuery {
   private final List<Predicate> predicates = new ArrayList<Predicate>();
 
   private JcrQuery(String path) {
-    // Standardize trailing slashes
+    // Standardize trailing slashes, to allow for both "path/to/node" and "path/to/node/" as inputs
     if (path.length() > 1 && !path.endsWith("/")) {
       path = path.concat("/");
     }
-    this.path = ISO9075.encodePath(path);
+    this.path = QueryUtils.encodePath(path);
   }
 
   /**
@@ -75,12 +74,13 @@ public class JcrQuery {
   }
 
   /**
-   * Specifies a particular node type to match in the query. Not required.
+   * Specifies a particular CQ node type to match in the query. Not required.
    * 
    * @param typeName A node type to match
    * @return An updated JcrQuery object.
    */
   public JcrQuery withType(String typeName) {
+    // TODO: Move to CQ-specific subclass
     Predicate typeComparison = Property.property("cq:type").eq(typeName);
     predicates.add(typeComparison);
     return this;

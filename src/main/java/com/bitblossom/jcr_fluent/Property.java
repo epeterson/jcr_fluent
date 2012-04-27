@@ -1,5 +1,6 @@
 package com.bitblossom.jcr_fluent;
 
+
 /**
  * A Property represents a JCR Property name. A Property provides several convenience methods for
  * building Predicate objects.
@@ -11,7 +12,8 @@ public class Property {
   private final String property;
 
   private Property(String property) {
-    this.property = property;
+    // XXX: Should the path to a selector property be escaped? Jackrabbit ISO9075#encodePath doesn't
+    this.property = QueryUtils.encodePath(property);
   }
 
   /**
@@ -51,9 +53,6 @@ public class Property {
 
   @Override
   public String toString() {
-    // TODO: Handle properties at sub-levels by identifying parts of the string and pre-pend the
-    // @-symbol here
-    // TODO: Escape illegal characters in the property name/path
     return property;
   }
 

@@ -74,7 +74,6 @@ public class Predicate {
       Calendar cal = Calendar.getInstance();
       cal.setTime((Date) value);
       // Use JAXB to help convert to a valid DateTime String (ISO8601)
-      // XXX: Use Jackrabbit ISO8601 class instead?
       return String.format("xs:dateTime('%s')", DatatypeConverter.printDateTime(cal));
     } else if (value instanceof Calendar) {
       return String.format("xs:dateTime('%s')", DatatypeConverter.printDateTime((Calendar) value));
