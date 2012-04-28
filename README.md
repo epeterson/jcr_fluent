@@ -3,6 +3,9 @@
 ####A fluent way to build XPath Queries for Java Content Repositories
 
 - - - - -
+#####Warning: This project is still just a prototype, and not in a usable state.
+
+
 Instead of building XPath Queries through String concatenation, it can be more pleasant and less error-prone to build them using a fluent API.
 
 As a concrete example, the XPath query:
