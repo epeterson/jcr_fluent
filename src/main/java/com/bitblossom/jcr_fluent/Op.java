@@ -16,5 +16,5 @@ package com.bitblossom.jcr_fluent;
  * @author eli
  */
 public enum Op {
-  EQ, NEQ, LIKE, GT, LT, GTEQ, LTEQ, ACTIV, NACTIV, CONTAINS
+  EQ, NEQ, LIKE, GT, LT, GTEQ, LTEQ, ACTIV, NACTIV, CONTAINS, EXISTS
 }

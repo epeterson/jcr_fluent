@@ -33,6 +33,7 @@ public class JcrQuery {
 
   private String path = "/";
   private String nodeName = "*";
+  private String nodeType = null;
 
   private boolean includingDescendantPaths = false;
 
@@ -80,9 +81,7 @@ public class JcrQuery {
    * @return An updated JcrQuery object.
    */
   public JcrQuery withType(String typeName) {
-    // TODO: Move to CQ-specific subclass
-    Predicate typeComparison = Property.property("cq:type").eq(typeName);
-    predicates.add(typeComparison);
+    this.nodeType = typeName;
     return this;
   }
 
@@ -125,7 +124,14 @@ public class JcrQuery {
       builder.append("/");
     }
 
-    builder.append(nodeName);
+    if (nodeType != null) {
+      // Node type statements look like: "element(nodeName, nodeType)"
+      builder.append("element(").append(nodeName).append(", ");
+      builder.append(nodeType).append(")");
+    } else {
+      builder.append(nodeName);
+    }
+
     if (!predicates.isEmpty()) {
       builder.append("[");
       String predicateString = Joiner.on(" and ").join(predicates);

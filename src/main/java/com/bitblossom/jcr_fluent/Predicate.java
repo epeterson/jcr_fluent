@@ -68,7 +68,7 @@ public class Predicate {
     if (value instanceof String) {
       String string = (String) value;
       string = string.replaceAll("'", "''").replaceAll("\"", "\"\"");
-      // Escape other special characters
+      // Other special characters that need escaping?
       return String.format("'%s'", value);
     } else if (value instanceof Date) {
       Calendar cal = Calendar.getInstance();
@@ -90,21 +90,23 @@ public class Predicate {
     if (predicates == null) {
       switch (op) {
         case EQ:
-          return String.format("@%s=%s", property.toString(), formatValue(value));
+          return String.format("%s=%s", property.toString(), formatValue(value));
         case NEQ:
-          return String.format("not(@%s=%s)", property.toString(), formatValue(value));
+          return String.format("not(%s=%s)", property.toString(), formatValue(value));
         case LIKE:
-          return String.format("jcr:like(@%s, %s)", property.toString(), formatValue(value));
+          return String.format("jcr:like(%s, %s)", property.toString(), formatValue(value));
         case GT:
-          return String.format("@%s>%s", property.toString(), formatValue(value));
+          return String.format("%s>%s", property.toString(), formatValue(value));
         case LT:
-          return String.format("@%s<%s", property.toString(), formatValue(value));
+          return String.format("%s<%s", property.toString(), formatValue(value));
         case GTEQ:
-          return String.format("@%s>=%s", property.toString(), formatValue(value));
+          return String.format("%s>=%s", property.toString(), formatValue(value));
         case LTEQ:
-          return String.format("@%s<=%s", property.toString(), formatValue(value));
+          return String.format("%s<=%s", property.toString(), formatValue(value));
         case CONTAINS:
-          return String.format("jcr:contains(@%s, %s)", property.toString(), formatValue(value));
+          return String.format("jcr:contains(%s, %s)", property.toString(), formatValue(value));
+        case EXISTS:
+          return String.format("%s", property.toString());
         default:
           throw new UnsupportedOperationException("Operation not implemented yet: " + op);
       }

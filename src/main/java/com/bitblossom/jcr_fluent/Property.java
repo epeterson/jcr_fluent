@@ -17,12 +17,16 @@ public class Property {
   }
 
   /**
-   * Creates and returns a new Property object.
+   * Creates and returns a new Property object. A property must include the identifying character
+   * '@'.
    * 
    * @param property A String representing the property name
    * @return A new Property object.
    */
   public static Property property(String property) {
+    if (!property.contains("@")) {
+      throw new IllegalArgumentException("A property name must contain the '@' character");
+    }
     return new Property(property);
   }
 
@@ -49,6 +53,10 @@ public class Property {
 
   public Predicate contains(Object value) {
     return new Predicate(this, value, Op.CONTAINS);
+  }
+
+  public Predicate exists() {
+    return new Predicate(this, null, Op.EXISTS);
   }
 
   @Override
