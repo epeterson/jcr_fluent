@@ -63,4 +63,19 @@ public class JcrQueryTest {
     assertEquals(expected, query.buildStatement());
   }
 
+  @Test
+  public void canOrderDescending() {
+    JcrQuery query = JcrQuery.at("/").includingDescendantPaths().orderBy("@propertyA", false);
+    String expected = "//* order by @propertyA descending";
+    assertEquals(expected, query.buildStatement());
+  }
+
+  @Test
+  public void canOrderByMultipleProperties() {
+    JcrQuery query =
+        JcrQuery.at("/").includingDescendantPaths().orderBy("@propertyA").orderBy("@propertyB");
+    String expected = "//* order by @propertyA ascending, @propertyB ascending";
+    assertEquals(expected, query.buildStatement());
+  }
+
 }

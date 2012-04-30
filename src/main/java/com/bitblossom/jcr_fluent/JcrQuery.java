@@ -38,6 +38,7 @@ public class JcrQuery {
   private boolean includingDescendantPaths = false;
 
   private final List<Predicate> predicates = new ArrayList<Predicate>();
+  private final List<Order> orderings = new ArrayList<Order>();
 
   private JcrQuery(String path) {
     // Standardize trailing slashes, to allow for both "path/to/node" and "path/to/node/" as inputs
@@ -100,7 +101,7 @@ public class JcrQuery {
   }
 
   /**
-   * Allows specification of a list of predicate conditions, to match against node properties.
+   * Specifies a list of predicate conditions, to match against node properties.
    * 
    * @param predicates Predicate objects to use in the query
    * @return An updated JcrQuery object.
@@ -110,6 +111,43 @@ public class JcrQuery {
    */
   public JcrQuery with(Predicate... predicates) {
     this.predicates.addAll(Arrays.asList(predicates));
+    return this;
+  }
+
+  /**
+   * <p>
+   * Specifies the ordering of the result nodes according to the natural ordering of the values of a
+   * property of the result nodes. The default ordering is "ascending".
+   * </p>
+   * 
+   * @param property Name of the property to order on
+   * @return An updated JcrQuery object.
+   * 
+   * @see JcrQuery#orderBy(String, boolean)
+   */
+  public JcrQuery orderBy(String property) {
+    return orderBy(property, true);
+  }
+
+  /**
+   * <p>
+   * Specifies the ordering of the result nodes according to the natural ordering of the values of a
+   * property of the result nodes.
+   * </p>
+   * 
+   * <p>
+   * Note that multiple orderBy specifiers may be used together, i.e.:
+   * <code>query.orderBy("@propertyA").orderBy("@propertyB")</code> will result in the specifier:
+   * <code>"order by @propertyA, @propertyB"</code>.
+   * </p>
+   * 
+   * @param property Name of the property to order on
+   * @param ascending If true, the order modifier is "ascending" - if false, the order modifier is
+   *        "descending"
+   * @return An updated JcrQuery object.
+   */
+  public JcrQuery orderBy(String property, boolean ascending) {
+    this.orderings.add(new Order(property, ascending));
     return this;
   }
 
@@ -137,6 +175,12 @@ public class JcrQuery {
       String predicateString = Joiner.on(" and ").join(predicates);
       builder.append(predicateString);
       builder.append("]");
+    }
+
+    if (!orderings.isEmpty()) {
+      builder.append(" order by ");
+      String orderingString = Joiner.on(", ").join(orderings);
+      builder.append(orderingString);
     }
     return builder.toString();
   }
