@@ -3,6 +3,7 @@ package com.bitblossom.jcr_fluent;
 import static com.bitblossom.jcr_fluent.Predicate.all;
 import static com.bitblossom.jcr_fluent.Property.property;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -58,6 +59,28 @@ public class JcrQueryIntegrationTest extends BaseIntegrationTest {
             .execute(session);
     assertTrue(nodeItr.hasNext());
     assertEquals("xhtml:html", nodeItr.nextNode().getName());
+  }
+
+  @Test
+  public void canLocateElementWithNullProperty() throws RepositoryException {
+    NodeIterator nodeItr =
+        JcrQuery.at("/jcr:root/ellipse_test/").includingDescendantPaths()
+            .with(property("@width").exists(), property("@x").nexists()).execute(session);
+
+    assertTrue(nodeItr.hasNext());
+    assertEquals("svg:svg", nodeItr.nextNode().getName());
+    assertFalse(nodeItr.hasNext());
+  }
+
+  @Test
+  public void canLocateElementWithPropertyNotEquals() throws RepositoryException {
+    NodeIterator nodeItr =
+        JcrQuery.at("/jcr:root/ellipse_test/").includingDescendantPaths()
+            .with(property("@width").exists(), property("@width").neq("12cm")).execute(session);
+
+    assertTrue(nodeItr.hasNext());
+    assertEquals("svg:rect", nodeItr.nextNode().getName());
+    assertFalse(nodeItr.hasNext());
   }
 
 }

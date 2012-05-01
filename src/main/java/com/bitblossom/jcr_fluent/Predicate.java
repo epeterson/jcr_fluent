@@ -92,7 +92,7 @@ public class Predicate {
         case EQ:
           return String.format("%s=%s", property.toString(), formatValue(value));
         case NEQ:
-          return String.format("not(%s=%s)", property.toString(), formatValue(value));
+          return String.format("%s!=%s", property.toString(), formatValue(value));
         case LIKE:
           return String.format("jcr:like(%s, %s)", property.toString(), formatValue(value));
         case GT:
@@ -107,6 +107,8 @@ public class Predicate {
           return String.format("jcr:contains(%s, %s)", property.toString(), formatValue(value));
         case EXISTS:
           return String.format("%s", property.toString());
+        case NEXISTS:
+          return String.format("not(%s)", property.toString());
         default:
           throw new UnsupportedOperationException("Operation not implemented yet: " + op);
       }

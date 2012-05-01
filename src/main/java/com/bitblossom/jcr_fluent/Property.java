@@ -12,7 +12,8 @@ public class Property {
   private final String property;
 
   private Property(String property) {
-    // XXX: Should the path to a selector property be escaped? Jackrabbit ISO9075#encodePath doesn't
+    // XXX: Should the path to a selector property be escaped? I would assume yes, but Jackrabbit
+    // ISO9075#encodePath doesn't. Should make integration test to verify.
     this.property = QueryUtils.encodePath(property);
   }
 
@@ -57,6 +58,10 @@ public class Property {
 
   public Predicate exists() {
     return new Predicate(this, null, Op.EXISTS);
+  }
+
+  public Predicate nexists() {
+    return new Predicate(this, null, Op.NEXISTS);
   }
 
   @Override
