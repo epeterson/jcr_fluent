@@ -1,6 +1,7 @@
 package com.bitblossom.jcr_fluent;
 
 import static com.bitblossom.jcr_fluent.Predicate.all;
+import static com.bitblossom.jcr_fluent.Property.anyPropertyContains;
 import static com.bitblossom.jcr_fluent.Property.property;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -81,6 +82,15 @@ public class JcrQueryIntegrationTest extends BaseIntegrationTest {
     assertTrue(nodeItr.hasNext());
     assertEquals("svg:rect", nodeItr.nextNode().getName());
     assertFalse(nodeItr.hasNext());
+  }
+
+  @Test
+  public void canLocateElementWithContainsFunctionAndWildcardProperty() throws RepositoryException {
+    NodeIterator nodeItr =
+        JcrQuery.at("/jcr:root/ellipse_test/").includingDescendantPaths()
+            .with(anyPropertyContains("center")).execute(session);
+
+    assertTrue(nodeItr.hasNext());
   }
 
 }

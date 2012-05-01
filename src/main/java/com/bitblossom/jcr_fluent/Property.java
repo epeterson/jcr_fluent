@@ -31,6 +31,17 @@ public class Property {
     return new Property(property);
   }
 
+  /**
+   * Creates and returns a new Predicate object, which will match the given value against all
+   * properties of the current node-set. This is equivalent to a "jcr:contains(., value)"
+   * restriction.
+   * 
+   * @return A new Predicate object.
+   */
+  public static Predicate anyPropertyContains(Object value) {
+    Property anyProperty = new Property(".");
+    return new Predicate(anyProperty, value, Op.CONTAINS);
+  }
 
   public Predicate eq(Object value) {
     return new Predicate(this, value, Op.EQ);
@@ -52,6 +63,13 @@ public class Property {
     return new Predicate(this, value, Op.LT);
   }
 
+  /**
+   * Note that single quote, double quote, hyphen and backslash all need to be escaped. The escape
+   * indicator is backslash ("\").
+   * 
+   * @param value The value to search for
+   * @return A new Predicate object, representing a jcr:contains() function.
+   */
   public Predicate contains(Object value) {
     return new Predicate(this, value, Op.CONTAINS);
   }
